@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      body {
+          text-align: center;
+          font-family: sans-serif;
+      }
+      h1 {
+          margin:0 0 10px;
+          font-size: 15px;
+      }
+      #wrapper {
+          position: fixed;
+          height: 370px;
+          top: 45%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+      }
+      #stoplight {
+          height: 340px;
+          width: 200px;
+          border-radius: 20px;
+          border:10px #000 solid;
+          background-color: #333;
+          text-align: center;
+      }
+      .light {
+          height: 80px;
+          width: 80px;
+          margin: 14px 50px 0;
+          border-radius: 50%;
+          border: 4px #999 solid;
+          display: inline-block;
+          opacity: 0.1;
+      }
+      .light.on {
+          opacity: 1.0;
+      }
+      .light#red {
+          background-color: red;
+          box-shadow: 0 0 50px red;
+      }
+      .light#yellow {
+          background-color: yellow;
+          box-shadow: 0 0 30px yellow;
+      }
+      .light#green {
+          background-color: green;
+          box-shadow: 0 0 30px green;
+      }
+      #result {
+          margin-top: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="wrapper">
+        <h1>CLICK THE LIGHTS</h1>
+        <div id="stoplight">
+            <!-- try moving the 'on' class around amongst the lights - or removing it! -->
+            <div class="light" id="red"></div>
+            <div class="light" id="yellow"></div>
+            <div class="light on" id="green"></div>
+        </div>
+        <div id="result"></div>
+    </div>
+  </body>
+
+  <script>
+    // init
+    var lights = document.getElementsByClassName('light');
+    var colorCount = lights.length;
+    var colors = [];
+    var active = colorCount-1; // if no light is preclassed with 'on' then set to end of list so it will start by wrapping to beginning.
+    for (i=0; i < colorCount; i++) {
+        colors.push(lights[i].id);
+        var light = lights[i];
+        if(light.classList.contains('on')) {
+            active = i;
+        }
+    }
+
+    // click handler
+    var stoplight = document.getElementById('stoplight');
+    var result = document.getElementById('result');
+    stoplight.addEventListener("click", function(e) {
+        e.preventDefault();
+        result.innerHTML = 'you did not click a light';
+        var on = (e.target.classList.contains('on')) ? 'ON' : 'off';
+        if(e.target.classList.contains('light')) {
+          result.innerHTML = 'you clicked '
+               + e.target.id
+               + ' / ' + on
+               + '<br>with index '
+               + colors.indexOf(e.target.id);
+        }
+    });
+
+    // timer
+    var timer = setInterval(function() {
+        document.getElementById(colors[active]).classList.remove('on');
+        active = (active < colorCount-1) ? active + 1 : 0;
+        document.getElementById(colors[active]).classList.add('on');
+    }, 2000);
+
+  </script>
+</html>
